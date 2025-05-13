@@ -1,14 +1,42 @@
 sap.ui.define([
-    "sap/ui/core/UIComponent"
+  "sap/ui/core/UIComponent",
+  "sap/ui/Device",
+  "sap/ui/model/json/JSONModel"
 ],
-    function (UIComponent) {
-        "use strict";
+  function (UIComponent, Device, JSONModel) {
+    "use strict";
 
-        return UIComponent.extend("sap.training.exc.Component", {
+    return UIComponent.extend("sap.training.exc.Component", {
+
+      metadata: {
+        manifest: "json"
+      },
+
+      init: function () {
+        // call the base component's init function
+        UIComponent.prototype.init.apply(this, arguments);
+
+        // enable routing
+        this.getRouter().initialize();
+
+        // set device model
+        var oDeviceModel = new JSONModel(Device);
+        oDeviceModel.setDefaultBindingMode("OneWay");
+        this.setModel(oDeviceModel, "device");
+      },
+      getContentDensityClass: function () {
+        if (!this._sContentDensityClass) {
+          if (Device.support.touch) {
+            this._sContentDensityClass = "sapUiSizeCozy";
+          } else {
+            this._sContentDensityClass = "sapUiSizeCompact";
+          }
+        }
+        return this._sContentDensityClass;
+      }
 
 
 
-
-        });
-    }
+    });
+  }
 );
